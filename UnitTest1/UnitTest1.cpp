@@ -14,14 +14,14 @@ namespace UnitTest1
 		{
 
 			CoolClass coolClass;
-			Assert::AreEqual(3, coolClass.Calc(1, 2));
+			Assert::AreEqual(8, coolClass.Calc(4, 2)); // changes
 		}
 
 		TEST_METHOD(TestMethod2)
 		{
 
 			CoolClass coolClass;
-			Assert::AreEqual(5, coolClass.Calc(3, 2));
+			Assert::AreEqual(6, coolClass.Calc(3, 2));
 		}
 	};
 }
