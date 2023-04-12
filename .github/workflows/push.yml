@@ -36,12 +36,12 @@ jobs:
       run: msbuild /m /p:Configuration=${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_FILE_PATH}}
 
 
-    lint:
+  lint:
 
 
-      runs-on: windows-latest
+    runs-on: windows-latest
 
-      steps:
-      - name: RunLint
-        working-directory: ${{env.GITHUB_WORKSPACE}}
-        run: echo LINT
+    steps:
+    - name: RunLint
+      working-directory: ${{env.GITHUB_WORKSPACE}}
+      run: echo LINT
