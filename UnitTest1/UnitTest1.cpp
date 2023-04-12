@@ -14,7 +14,7 @@ namespace UnitTest1
 		{
 
 			CoolClass coolClass;
-			Assert::AreEqual(3, coolClass.Calc(1, 2));
+			Assert::AreEqual(10, coolClass.Calc(1, 2)); #FAILURE
 		}
 
 		TEST_METHOD(TestMethod2)
