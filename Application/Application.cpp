@@ -8,7 +8,7 @@
 CoolClass::CoolClass(void)
 {
 }
-1234 hello i am error hehehe
+
 int CoolClass::Calc(int a, int b)
 {
     if (a == b)
