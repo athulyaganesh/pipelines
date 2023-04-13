@@ -4,7 +4,7 @@ on:
   push:
     branches: [ master ]
   #pull_request:
-  # branches: [ master ]
+  #  branches: [ master ]
 
 env:
   # Path to the solution file relative to the root of the project.
@@ -16,7 +16,7 @@ env:
   BUILD_CONFIGURATION: Release
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build:
@@ -27,6 +27,10 @@ jobs:
 
     - name: Add MSBuild to PATH
       uses: microsoft/setup-msbuild@v1.0.2
+
+    - name: Restore NuGet packages
+      working-directory: ${{env.GITHUB_WORKSPACE}}
+      run: nuget restore ${{env.SOLUTION_FILE_PATH}}
 
     - name: Build
       working-directory: ${{env.GITHUB_WORKSPACE}}
@@ -41,15 +45,16 @@ jobs:
           path: x64\Release\ # or path/to/artifact
           if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn`
       
+
   lint:
-    
     runs-on: windows-latest
-    
+
     steps:
+    - uses: actions/checkout@v3
+
     - name: RunLint
       working-directory: ${{env.GITHUB_WORKSPACE}}
-      run: echo LINT
-
+      run: echo LINTING
 
   test:
     needs: [build, lint]
@@ -69,3 +74,42 @@ jobs:
     - name: RunTests
       working-directory: ${{env.GITHUB_WORKSPACE}}
       run: VSTest.Console.exe  x64\Release\UnitTest1.dll
+      
+  SaveBinary:
+    needs: [test]
+    runs-on: windows-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: DownloadBinaries
+      uses: actions/download-artifact@v3
+      with:
+        name: my-artifact
+        path: x64\Release
+    
+    - name: stage
+      working-directory: ${{env.GITHUB_WORKSPACE}}
+      run: copy  x64\Release\PipeplinesExe.exe .
+      
+    - name: addEmail
+      working-directory: ${{env.GITHUB_WORKSPACE}}
+      run: git config --global user.email "athulya.ganesh2001@gmail.com"
+      
+    - name: addName
+      working-directory: ${{env.GITHUB_WORKSPACE}}
+      run: git config --global user.name "Athulya Ganesh"
+      
+    - name: add
+      working-directory: ${{env.GITHUB_WORKSPACE}}
+      run: git add PipeplinesExe.exe 
+          
+    - name: commit
+      working-directory: ${{env.GITHUB_WORKSPACE}}
+      run: git commit -m "generated"
+      
+    - name: push
+      working-directory: ${{env.GITHUB_WORKSPACE}}
+      run: git push      
+      
+      
